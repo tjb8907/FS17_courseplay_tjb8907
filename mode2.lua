@@ -170,7 +170,15 @@ function courseplay:handle_mode2(vehicle, dt)
 					if combine.acParameters ~= nil and combine.acParameters.enabled and combine.isHired  and fillLevel >= 0.99*capacity then --AC stops at 99% fillLevel so we have to set this as full
 						combine.cp.wantsCourseplayer = true
 					end
-					if (fillLevel >= (capacity * vehicle.cp.followAtFillLevel / 100)) or capacity == 0 or combine.cp.wantsCourseplayer then
+					local remainingspace = vehicle.cp.totalCapacity - vehicle.cp.totalFillLevel;
+					--print("Remaining Space: "..remainingspace);
+					if fillLevel>=remainingspace and vehicle.cp.totalFillLevel >= 50 then
+						combine.cp.hasRemaining = true
+						print("Combine found with enough to fill me up.");
+					else
+						combine.cp.hasRemaining = false
+					end;
+					if (fillLevel >= (capacity * vehicle.cp.followAtFillLevel / 100)) or capacity == 0 or combine.cp.wantsCourseplayer or combine.cp.hasRemaining then
 						if capacity == 0 then
 							if combine.courseplayers == nil then
 								vehicle.cp.bestCombine = combine

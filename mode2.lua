@@ -170,15 +170,14 @@ function courseplay:handle_mode2(vehicle, dt)
 					if combine.acParameters ~= nil and combine.acParameters.enabled and combine.isHired  and fillLevel >= 0.99*capacity then --AC stops at 99% fillLevel so we have to set this as full
 						combine.cp.wantsCourseplayer = true
 					end
-					local remainingspace = vehicle.cp.totalCapacity - vehicle.cp.totalFillLevel;
-					--print("Remaining Space: "..remainingspace);
-					if fillLevel>=remainingspace and vehicle.cp.totalFillLevel >= 50 then
-						combine.cp.hasRemaining = true
-						print("Combine found with enough to fill me up.");
+					local remainingTipperSpace = vehicle.cp.totalCapacity - vehicle.cp.totalFillLevel;
+					if fillLevel>=remainingTipperSpace and vehicle.cp.totalFillLevel > 0 then -- >0 make sure if there are 2 unloaders that it will fill the one half fill and not on that is waiting at start (the priority option might accomplish this as well??) Not sure if its necessary unless combine grain tank is larger than tipper capacity.
+						combine.cp.hasTopOffAmt = true
+						
 					else
-						combine.cp.hasRemaining = false
+						combine.cp.hasTopOffAmt = false
 					end;
-					if (fillLevel >= (capacity * vehicle.cp.followAtFillLevel / 100)) or capacity == 0 or combine.cp.wantsCourseplayer or combine.cp.hasRemaining then
+					if (fillLevel >= (capacity * vehicle.cp.followAtFillLevel / 100)) or capacity == 0 or combine.cp.wantsCourseplayer or combine.cp.hasTopOffAmt then
 						if capacity == 0 then
 							if combine.courseplayers == nil then
 								vehicle.cp.bestCombine = combine
